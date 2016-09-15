@@ -1,0 +1,17 @@
+Equipment:
+    Phil: PSoC (Desktop), SurfaceBook, Android, 3 HC05 BT modules (1 HC06?), Google Cardboard, access to Rift?, 3D printer access?
+    Yousef: PSoC, Mac, iPhone 5S
+    Drew: PSoC, Mac, iPhone 6S, Dev account, Google Cardboard
+
+Ideas:
+    Areas: Web, Mobile, IoT, VR/AR
+
+    APIs:
+        - Apple: MPS, Speech, Photos (faces), Siri (Intents), Location, Motion 
+        - Microsoft: speaker recognition, faces, emotion, bots
+        - Google: TensorFlow, DeepMind(?)
+        - Clarifai: image tagging, video tagging
+
+    Possibilities:
+        - Match voices with faces
+        - Pronunciation correction/accent reduction
