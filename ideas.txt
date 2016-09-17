@@ -17,3 +17,6 @@ Ideas:
         - Pronunciation correction/accent reduction
         - Listen to conversation with rectuiter, add them on LinkedIn and autogenerate follow up email
         - Convert voice mails into texts (already exists :/ )
+        - Word tagging in videos (Scan me/video mashup)
+        - Voice to voice mail
+        - Phone lagger
