@@ -12,6 +12,7 @@
 		CA0FFA411D8DBEF500EA2CA6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA401D8DBEF500EA2CA6 /* ViewController.m */; };
 		CA0FFA461D8DBEF500EA2CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */; };
 		CA0FFA491D8DBEF500EA2CA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */; };
+		CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,8 @@
 		CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA0FFA481D8DBEF500EA2CA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCRXMLReader.h; sourceTree = "<group>"; };
+		CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCRXMLReader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,8 @@
 				CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */,
 				CA0FFA3F1D8DBEF500EA2CA6 /* ViewController.h */,
 				CA0FFA401D8DBEF500EA2CA6 /* ViewController.m */,
+				CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */,
+				CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */,
 				CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */,
 				CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */,
 				CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */,
@@ -147,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA0FFA411D8DBEF500EA2CA6 /* ViewController.m in Sources */,
+				CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */,
 				CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */,
 				CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */,
 			);

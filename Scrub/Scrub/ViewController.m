@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "SCRXMLReader.h"
 
 @interface ViewController ()
 
@@ -18,15 +19,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    CGPoint size = {600.0, 200.0};
-    CGPoint origin = {([[self view] window].bounds.size.width - size.x) / 2.0, ([[self view] window].bounds.size.height - size.y) / 2.0};
+    CGPoint size = {100.0, 50.0};
+    CGPoint origin = {([UIScreen mainScreen].bounds.size.width - size.x) / 2.0, ([UIScreen mainScreen].bounds.size.height - size.y) / 2.0};
     
-    NSLog(@"%f %f", size.x, size.y);
-    NSLog(@"%f %f", origin.x, origin.y);
-    _theButton = [[UIButton alloc] initWithFrame:CGRectMake(origin.x, origin.y, size.x, size.y)];
+    _theButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_theButton setFrame:CGRectMake(origin.x, origin.y, size.x, size.y)];
     [_theButton setTitle:@"SCRUB" forState:UIControlStateNormal];
-    [_theButton setBackgroundColor:[UIColor redColor]];
-    [_theButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    //[_theButton setBackgroundColor:[UIColor redColor]];
+    //[_theButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_theButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     [[self view] addSubview:_theButton];
@@ -41,8 +41,13 @@
 
 #pragma mark - Public
 
-- (void)buttonPressed:(UIButton *)sender {
-    // IMPLEMENT MEEEEEE
+- (void)buttonPressed:(UIButton *) button {
+    NSURL *URL = [NSURL URLWithString:@"https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0"];
+    NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
+    NSError *error = nil;
+    
+    NSDictionary *dictionary = [SCRXMLReader dictionaryForXMLData:data error:&error];
+    NSLog(dictionary);
 }
 
 
