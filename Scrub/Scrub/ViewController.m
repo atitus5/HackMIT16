@@ -42,12 +42,57 @@
 #pragma mark - Public
 
 - (void)buttonPressed:(UIButton *) button {
-    NSURL *URL = [NSURL URLWithString:@"https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0"];
+    NSString* urlString = @"https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0";
+    NSDictionary *dictionary = getXMLDict(urlString);
+    
+    NSLog(@"%@", dictionary);
+    
+    // Change dict to form: {time1:value1, tiem2:value2}
+    NSDictionary *formatedDictionary = formatYoutubeCaptionDict(dictionary);
+}
+
+/**
+ * @return:
+ */
+NSDictionary* getXMLDict(NSString* urlString) {
+    NSURL *URL = [NSURL URLWithString:urlString];
     NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
     NSError *error = nil;
     
-    NSDictionary *dictionary = [SCRXMLReader dictionaryForXMLData:data error:&error];
-    NSLog(dictionary);
+    return [SCRXMLReader dictionaryForXMLData:data error:&error];
+}
+
+/**
+ * @return: dictionary of the form {time1:value1, tiem2:value2, ...}
+ */
+NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
+    NSDictionary* formattedDict = @{};
+    
+    // {"transciprt: <Dict>"}
+    NSMutableDictionary* textDict = dictionary[@"transcript"];
+    // {"text": <Array>}
+    NSMutableArray* captionSetsArray = textDict[@"text"];
+    
+    for (NSMutableArray* captionSet in captionSetsArray) {
+        formattedDict[captionSet[]] = @"Jack";
+    }
+    
+    return formattedDict;
+}
+
+NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
+    NSMutableArray *times = [NSMutableArray array];
+    
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL* stop) {
+        
+        if ([value rangeOfString:phrase].location == NSNotFound) {
+        } else {
+            [times addObject:key];
+        }
+        
+    }];
+    
+    return times;
 }
 
 
