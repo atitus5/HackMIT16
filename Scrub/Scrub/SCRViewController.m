@@ -42,6 +42,7 @@
 #pragma mark - Public
 
 - (void)buttonPressed:(UIButton *) button {
+    NSString *phrase = @"that";
     NSString *videoId = @"zGb9smintY0";
     NSString *urlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
 
@@ -53,6 +54,10 @@
     NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
     
     NSLog(@"formatted dict= %@", formattedDictionary);
+    
+    NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
+    
+    NSLog(@"%@", timesArray);
 }
 
 /**
@@ -89,16 +94,21 @@ NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
     return formattedDict;
 }
 
+/**
+ * @param dictionary : of the form {"0":"hi", "1.5":"welcome"} where the numbers are times
+ *                      in seconds and the strings are the dialouge during that time
+ * @param phrase : a phrase to be matched in the dictionary values
+ * @return: list of times where phrase appeared. Case insensitive search
+ */
 NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
+    phrase = [phrase lowercaseString];
     NSMutableArray *times = [NSMutableArray array];
     
     [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL* stop) {
-        
-        if ([value rangeOfString:phrase].location == NSNotFound) {
+        if ([[value lowercaseString] rangeOfString:phrase].location == NSNotFound) {
         } else {
             [times addObject:key];
         }
-        
     }];
     
     return times;
