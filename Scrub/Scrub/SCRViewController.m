@@ -49,8 +49,10 @@
     
     //NSLog(@"%@", dictionary);
     
-    // Change dict to form: {time1:value1, time2:value2}
+    // Change dict to form: {time1:value1, tiem2:value2}
     NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
+    
+    NSLog(@"formatted dict= %@", formattedDictionary);
 }
 
 /**
@@ -67,15 +69,21 @@ NSDictionary* getXMLDict(NSString* urlString) {
  * @return: dictionary of the form {time1:value1, tiem2:value2, ...}
  */
 NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
-    NSDictionary* formattedDict = @{};
+    NSMutableDictionary* formattedDict = [NSMutableDictionary dictionaryWithDictionary:@{}];
+    // dictionary = {"transcript: <Dict>"}
     
-    // {"transcript: <Dict>"}
-    NSMutableDictionary* textDict = dictionary[@"transcript"];
     // {"text": <Array>}
+    NSMutableDictionary* textDict = dictionary[@"transcript"];
+    
+    // [<Set>, <Set>, ...]
     NSMutableArray* captionSetsArray = textDict[@"text"];
     
-    for (NSMutableArray* captionSet in captionSetsArray) {
-        formattedDict[captionSet[]] = @"Jack";
+    // Iterate through the list:
+    //  captionSet = {"start":"0", "dur":"3.22", "text":"I said a thing"}
+    for (NSMutableDictionary* captionSet in captionSetsArray) {
+        NSString* time = captionSet[@"start"];
+        NSString* text = captionSet[@"text"];
+        formattedDict[time] = text;
     }
     
     return formattedDict;
