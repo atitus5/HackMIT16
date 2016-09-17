@@ -44,9 +44,9 @@
 - (void)buttonPressed:(UIButton *) button {
     NSString *phrase = @"that";
     NSString *videoId = @"zGb9smintY0";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
+    NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
 
-    NSDictionary *dictionary = getXMLDict(urlString);
+    NSDictionary *dictionary = getXMLDict(captionUrlString);
     
     //NSLog(@"%@", dictionary);
     
@@ -58,6 +58,9 @@
     NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
     
     NSLog(@"%@", timesArray);
+    
+    NSArray *youtubeUrlArray = getYoutubeUrls(videoId, timesArray);
+    NSLog(@"youtubeUrlArray: %@", youtubeUrlArray);
 }
 
 /**
@@ -112,6 +115,31 @@ NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
     }];
     
     return times;
+}
+
+/**
+ *
+ */
+NSArray* getYoutubeUrls(NSString *videoId, NSArray *times) {
+    
+    // Need to construct: "https://youtu.be/ <videoId> ?t= <timeInSeconds> s
+    NSMutableString *youtubeWatchUrl = [@"https://youtu.be/" mutableCopy];
+    [youtubeWatchUrl appendString:videoId];
+    [youtubeWatchUrl appendString:[@"?t=" mutableCopy]];
+    
+    NSMutableArray *youtubeUrlsArray = [NSMutableArray array];
+    
+    // Iterate through times:
+    for (NSString* time in times) {
+        NSMutableString *youtubeWatchUrlFull = [youtubeWatchUrl mutableCopy];
+        NSInteger timeInt = [time integerValue];
+        NSString *timeString = [NSString stringWithFormat: @"%ld", (long)timeInt];
+        [youtubeWatchUrlFull appendString:timeString];
+        [youtubeWatchUrlFull appendString:@"s"];
+        [youtubeUrlsArray addObject:youtubeWatchUrlFull];
+    }
+    
+    return youtubeUrlsArray;
 }
 
 
