@@ -8,13 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SCRXMLReader : NSObject
-{
-    NSMutableArray *dictionaryStack;
-    NSMutableString *textInProgress;
-}
+@interface SCRXMLReader : NSObject <NSXMLParserDelegate>
 
-+ (NSDictionary *)dictionaryForXMLData:(NSData *)data error:(NSError **)errorPointer;
-+ (NSDictionary *)dictionaryForXMLString:(NSString *)string error:(NSError **)errorPointer;
++ (NSDictionary *)dictionaryForXMLData:(NSData *)data;
++ (NSDictionary *)dictionaryForXMLString:(NSString *)string;
 
 @end

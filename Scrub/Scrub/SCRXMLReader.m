@@ -12,43 +12,33 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 @interface SCRXMLReader (Internal)
 
-- (id)initWithError:(NSError **)error;
 - (NSDictionary *)objectWithData:(NSData *)data;
 
 @end
 
-@implementation SCRXMLReader
+@implementation SCRXMLReader {
+    NSMutableArray *dictionaryStack;
+    NSMutableString *textInProgress;
+}
 
 #pragma mark -
 #pragma mark Public methods
 
-+ (NSDictionary *)dictionaryForXMLData:(NSData *)data error:(NSError **)error
++ (NSDictionary *)dictionaryForXMLData:(NSData *)data
 {
-    SCRXMLReader *reader = [[SCRXMLReader alloc] initWithError:error];
+    SCRXMLReader *reader = [[SCRXMLReader alloc] init];
     NSDictionary *rootDictionary = [reader objectWithData:data];
     return rootDictionary;
 }
 
-+ (NSDictionary *)dictionaryForXMLString:(NSString *)string error:(NSError **)error
++ (NSDictionary *)dictionaryForXMLString:(NSString *)string
 {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-    return [SCRXMLReader dictionaryForXMLData:data error:error];
+    return [SCRXMLReader dictionaryForXMLData:data];
 }
 
 #pragma mark -
 #pragma mark Parsing
-
-- (id)initWithError:(NSError **)error
-{
-    if (self = [super init])
-    {
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-}
 
 - (NSDictionary *)objectWithData:(NSData *)data
 {
@@ -62,7 +52,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
     
     // Parse the XML
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
-    parser.delegate = self;
+    [parser setDelegate:self];
     BOOL success = [parser parse];
     
     // Return the stack’s root dictionary on success
@@ -148,6 +138,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError
 {
     // Set the error pointer to the parser’s error object
+    // TODO
 }
 
 @end

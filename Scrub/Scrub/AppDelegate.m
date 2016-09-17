@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "ViewController.h"
+#import "SCRViewController.h"
 
 @interface AppDelegate ()
 
@@ -26,7 +26,7 @@
     [self setWindow:mainWindow];
     
     // Finalize window and display
-    [[self window] setRootViewController:[[ViewController alloc] init]];
+    [[self window] setRootViewController:[[SCRViewController alloc] init]];
     [[self window] setBackgroundColor:[UIColor whiteColor]];
     [[self window] makeKeyAndVisible];
     

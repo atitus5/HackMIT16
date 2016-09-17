@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  SCRViewController.h
 //  Scrub
 //
 //  Created by Yousef Alowayed on 9/17/16.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface SCRViewController : UIViewController
 
 @property (nonatomic) UIButton *theButton;
 

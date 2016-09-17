@@ -1,19 +1,19 @@
 //
-//  ViewController.m
+//  SCRViewController.m
 //  Scrub
 //
 //  Created by Yousef Alowayed on 9/17/16.
 //  Copyright © 2016 Drew Titus. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "SCRViewController.h"
 #import "SCRXMLReader.h"
 
-@interface ViewController ()
+@interface SCRViewController ()
 
 @end
 
-@implementation ViewController
+@implementation SCRViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,12 +42,13 @@
 #pragma mark - Public
 
 - (void)buttonPressed:(UIButton *) button {
-    NSURL *URL = [NSURL URLWithString:@"https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0"];
+    NSString *videoId = @"zGb9smintY0";
+    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId]];
     NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
     NSError *error = nil;
     
     NSDictionary *dictionary = [SCRXMLReader dictionaryForXMLData:data error:&error];
-    NSLog(dictionary);
+    NSLog(@"%@", dictionary);
 }
 
 
