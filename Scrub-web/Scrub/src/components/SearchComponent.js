@@ -6,16 +6,18 @@ require('styles//Search.css');
 require('reqwest');
 
 var parseString = require('xml2js').parseString;
+var $ = require('jquery');
 
 var SearchBar = React.createClass({
   componentDidMount(){
     $.ajax({
       url: 'https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0',
       dataType: 'xml',
-      success: function(data) {
-        parseString(xml, function (err, result) {
-          console.dir(result);
-        });
+      success: function(xml) {
+        var xmlDoc = $.parseXML( xml ),
+        $xml = $( xmlDoc ),
+        $text = $xml.find( 'text' );
+        console.log($text.text());
       }
     });
   },
