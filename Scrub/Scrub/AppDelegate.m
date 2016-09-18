@@ -10,6 +10,8 @@
 
 #import "SCRHomeViewController.h"
 
+NSString * const kScrubFont = @"BreeSerif-Regular";
+
 @interface AppDelegate ()
 
 @end

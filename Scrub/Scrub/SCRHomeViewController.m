@@ -9,6 +9,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "SCRHomeViewController.h"
+
+#import "AppDelegate.h"
+#import "SCRResultsViewController.h"
 #import "SCRXMLReader.h"
 
 #define MARGIN 30.0
@@ -19,9 +22,17 @@
 #define BUTTON_FONTSIZE 40.0
 #define SELECTED_ALPHA 0.7
 
-static NSString *kScrubFont = @"BreeSerif-Regular";
-
 @interface SCRHomeViewController () <UITextFieldDelegate>
+
+@property (nonatomic) UILabel *welcomeLabel;
+@property (nonatomic) UILabel *instructionLabel;
+@property (nonatomic) UILabel *phraseLabel;
+@property (nonatomic) UITextField *phraseField;
+@property (nonatomic) UILabel *urlLabel;
+@property (nonatomic) UITextField *urlField;
+@property (nonatomic) UIButton *scrubButton;
+@property (nonatomic) UIActivityIndicatorView *indicator;
+@property (nonatomic) dispatch_queue_t homeQueue;
 
 @end
 
@@ -111,14 +122,17 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
     [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0] forState:UIControlStateNormal];
     [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:SELECTED_ALPHA] forState:UIControlStateSelected];
     [[_scrubButton layer] setCornerRadius:BUTTON_RADIUS];
-    [_scrubButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_scrubButton addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [[self view] addSubview:_scrubButton];
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    // Set up queue and activity indicator for network data fetching
+    _homeQueue = dispatch_queue_create("com.drewtitus.Scrub.homeQueue", NULL);
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [_indicator setFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
+    [_indicator setCenter:[[self view] center]];
+    [[self view] addSubview:_indicator];
+    [_indicator bringSubviewToFront:[self view]];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:TRUE];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -136,9 +150,19 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
     return YES;
 }
 
-#pragma mark - Public
+#pragma mark - Private
 
-- (void)buttonPressed:(UIButton *) button {
+- (void)_presentAlert:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+    
+    [alert addAction:dismissAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)_buttonPressed:(UIButton *) button {
     NSString *phrase = [_phraseField text];
     if ([phrase length] != 0) {
         NSURLComponents *youtubeURLComps = [[NSURLComponents alloc] initWithString:[_urlField text]];
@@ -159,63 +183,48 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
         if (videoId) {
             NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?lang=en&v=%@", videoId];
             
-            NSDictionary *dictionary = getXMLDict(captionUrlString);
-            
-            //NSLog(@"%@", dictionary);
-            
-            // Change dict to form: {time1:value1, tiem2:value2}
-            NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
-            
-            if ([formattedDictionary count] != 0) {
-                //NSLog(@"formatted dict= %@", formattedDictionary);
-                NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
-                //NSLog(@"%@", timesArray);
-                NSArray *youtubeUrlArray = getYoutubeUrls(videoId, timesArray);
-                NSLog(@"youtubeUrlArray: %@", youtubeUrlArray);
+            // Start network fetch of XML caption data
+            [_indicator startAnimating];
+            dispatch_async(_homeQueue, ^{
+                NSDictionary *dictionary = _getXMLDict(captionUrlString);
                 
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Woo, URLs!"
-                                                                               message:[NSString stringWithFormat:@"%@", youtubeUrlArray]
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+                // Change dict to form: {time1:value1, tiem2:value2}
+                NSDictionary *formattedDictionary = _formatYoutubeCaptionDict(dictionary);
                 
-                [alert addAction:dismissAction];
-                [self presentViewController:alert animated:YES completion:nil];
-            } else {
-                // Notify user of lack of caption data... sigh...
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No dialogue data found"
-                                                                               message:@"No dialogue data found for this URL. This could be due to copyright issues, sadly..."
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
-                
-                [alert addAction:dismissAction];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
+                // Update UI - must be on main thread
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_indicator stopAnimating];
+                    if ([formattedDictionary count] != 0) {
+                        // Show the results!
+                        NSArray *timesArray = _getTimesOfPhrase(formattedDictionary, phrase);
+                        NSArray *youtubeUrlArray = _getYoutubeUrls(videoId, timesArray);
+                        
+                        //NSLog(@"%@", youtubeUrlArray);
+                        
+                        SCRResultsViewController *resultsVC = [[SCRResultsViewController alloc] initWithURLArray:youtubeUrlArray];
+                        [self presentViewController:resultsVC animated:YES completion:nil];
+                    } else {
+                        // Notify user of lack of caption data... sigh...
+                        [self _presentAlert:@"No dialogue data found"
+                                    message:@"No dialogue data found for this URL. This could be due to copyright issues, sadly..."];
+                    }
+                });
+            });
         } else {
             // Notify user of URL error
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter YouTube URL"
-                                                                           message:@"Please enter a YouTube URL"
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
-            
-            [alert addAction:dismissAction];
-            [self presentViewController:alert animated:YES completion:nil];
+            [self _presentAlert:@"Enter YouTube URL" message:@"Please enter a YouTube URL"];
         }
     } else {
         // Notify user of phrase error
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter a phrase"
-                                                                       message:@"Please enter a phrase (for example, \"There's always money in the banana stand\""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
-        
-        [alert addAction:dismissAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self _presentAlert:@"Enter a phrase"
+                    message:@"Please enter a phrase (for example, \"There's always money in the banana stand\""];
     }
 }
 
 /**
  * @return:
  */
-NSDictionary* getXMLDict(NSString* urlString) {
+NSDictionary* _getXMLDict(NSString* urlString) {
     NSURL *URL = [NSURL URLWithString:urlString];
     NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
     
@@ -225,7 +234,7 @@ NSDictionary* getXMLDict(NSString* urlString) {
 /**
  * @return: dictionary of the form {time1:value1, tiem2:value2, ...}
  */
-NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
+NSDictionary* _formatYoutubeCaptionDict(NSDictionary* dictionary) {
     NSMutableDictionary* formattedDict = [NSMutableDictionary dictionaryWithDictionary:@{}];
     // dictionary = {"transcript: <Dict>"}
     
@@ -252,7 +261,7 @@ NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
  * @param phrase : a phrase to be matched in the dictionary values
  * @return: list of times where phrase appeared. Case insensitive search
  */
-NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
+NSMutableArray* _getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
     phrase = [phrase lowercaseString];
     NSMutableArray *times = [NSMutableArray array];
     
@@ -269,7 +278,7 @@ NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
 /**
  *
  */
-NSArray* getYoutubeUrls(NSString *videoId, NSArray *times) {
+NSArray* _getYoutubeUrls(NSString *videoId, NSArray *times) {
     
     // Need to construct: "https://youtu.be/ <videoId> ?t= <timeInSeconds> s
     NSMutableString *youtubeWatchUrl = [@"https://youtu.be/" mutableCopy];

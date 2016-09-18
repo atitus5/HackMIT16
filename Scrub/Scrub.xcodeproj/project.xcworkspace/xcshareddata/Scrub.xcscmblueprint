@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "8428BA4F99194906A4DC5CE68A162240C057868D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "8428BA4F99194906A4DC5CE68A162240C057868D" : 9223372036854775807,
+    "8A29DA7057736C875D47E25C1221D68557445C94" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "55566433-915D-466D-980C-217494D2A3E9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "8428BA4F99194906A4DC5CE68A162240C057868D" : "HackMIT16\/",
+    "8A29DA7057736C875D47E25C1221D68557445C94" : "HackMIT16\/youtube-ios-player-helper\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Scrub",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Scrub\/Scrub.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:atitus5\/HackMIT16.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8428BA4F99194906A4DC5CE68A162240C057868D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/youtube\/youtube-ios-player-helper.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8A29DA7057736C875D47E25C1221D68557445C94"
+    }
+  ]
+}

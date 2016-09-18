@@ -12,7 +12,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 @interface SCRXMLReader (Internal)
 
-- (NSDictionary *)objectWithData:(NSData *)data;
+- (NSDictionary *)_objectWithData:(NSData *)data;
 
 @end
 
@@ -22,12 +22,12 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 }
 
 #pragma mark -
-#pragma mark Public methods
+#pragma mark Public class methods
 
 + (NSDictionary *)dictionaryForXMLData:(NSData *)data
 {
     SCRXMLReader *reader = [[SCRXMLReader alloc] init];
-    NSDictionary *rootDictionary = [reader objectWithData:data];
+    NSDictionary *rootDictionary = [reader _objectWithData:data];
     return rootDictionary;
 }
 
@@ -40,7 +40,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 #pragma mark -
 #pragma mark Parsing
 
-- (NSDictionary *)objectWithData:(NSData *)data
+- (NSDictionary *)_objectWithData:(NSData *)data
 {
     // Clear out any old data
     
