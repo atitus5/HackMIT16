@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#define BG_R (77.0/256.0)
+#define BG_G (179.0/256.0)
+#define BG_B (230.0/256.0)
+
+extern NSString * const kScrubFont;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

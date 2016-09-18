@@ -8,23 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		AEF0F70C1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F70B1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf */; };
+		AEF0F7131D8E244A00FE9C9B /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF0F7121D8E244A00FE9C9B /* YTPlayerView.m */; };
+		AEF0F7171D8E25FF00FE9C9B /* SCRAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F7161D8E25FF00FE9C9B /* SCRAssets.xcassets */; };
+		AEF0F7191D8E26A000FE9C9B /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F7181D8E26A000FE9C9B /* Assets.bundle */; };
+		AEF0F71C1D8E273400FE9C9B /* SCRResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */; };
 		CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3A1D8DBEF500EA2CA6 /* main.m */; };
 		CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */; };
 		CA0FFA411D8DBEF500EA2CA6 /* SCRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */; };
-		CA0FFA461D8DBEF500EA2CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */; };
 		CA0FFA491D8DBEF500EA2CA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */; };
 		CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AEF0F70B1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BreeSerif-Regular.ttf"; path = "../../Bree_Serif/BreeSerif-Regular.ttf"; sourceTree = "<group>"; };
+		AEF0F7111D8E244A00FE9C9B /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
+		AEF0F7121D8E244A00FE9C9B /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
+		AEF0F7161D8E25FF00FE9C9B /* SCRAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SCRAssets.xcassets; path = ../SCRAssets.xcassets; sourceTree = "<group>"; };
+		AEF0F7181D8E26A000FE9C9B /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
+		AEF0F71A1D8E273400FE9C9B /* SCRResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCRResultsViewController.h; sourceTree = "<group>"; };
+		AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCRResultsViewController.m; sourceTree = "<group>"; };
 		CA0FFA361D8DBEF500EA2CA6 /* Scrub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA0FFA3A1D8DBEF500EA2CA6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CA0FFA3C1D8DBEF500EA2CA6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		CA0FFA3F1D8DBEF500EA2CA6 /* SCRHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCRHomeViewController.h; sourceTree = "<group>"; };
 		CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCRHomeViewController.m; sourceTree = "<group>"; };
-		CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA0FFA481D8DBEF500EA2CA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCRXMLReader.h; sourceTree = "<group>"; };
@@ -50,6 +58,16 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		AEF0F7101D8E23D000FE9C9B /* YouTube */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0F7181D8E26A000FE9C9B /* Assets.bundle */,
+				AEF0F7111D8E244A00FE9C9B /* YTPlayerView.h */,
+				AEF0F7121D8E244A00FE9C9B /* YTPlayerView.m */,
+			);
+			name = YouTube;
+			sourceTree = "<group>";
+		};
 		CA0FFA2D1D8DBEF400EA2CA6 = {
 			isa = PBXGroup;
 			children = (
@@ -73,11 +91,14 @@
 				CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */,
 				CA0FFA3F1D8DBEF500EA2CA6 /* SCRHomeViewController.h */,
 				CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */,
+				AEF0F71A1D8E273400FE9C9B /* SCRResultsViewController.h */,
+				AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */,
 				CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */,
 				CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */,
-				CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */,
+				AEF0F7161D8E25FF00FE9C9B /* SCRAssets.xcassets */,
 				CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */,
 				CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */,
+				AEF0F7101D8E23D000FE9C9B /* YouTube */,
 				AEF0F70A1D8DEDC200FE9C9B /* Resources */,
 				CA0FFA391D8DBEF500EA2CA6 /* Supporting Files */,
 			);
@@ -151,9 +172,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEF0F7191D8E26A000FE9C9B /* Assets.bundle in Resources */,
 				CA0FFA491D8DBEF500EA2CA6 /* LaunchScreen.storyboard in Resources */,
+				AEF0F7171D8E25FF00FE9C9B /* SCRAssets.xcassets in Resources */,
 				AEF0F70C1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf in Resources */,
-				CA0FFA461D8DBEF500EA2CA6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +189,8 @@
 				CA0FFA411D8DBEF500EA2CA6 /* SCRHomeViewController.m in Sources */,
 				CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */,
 				CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */,
+				AEF0F7131D8E244A00FE9C9B /* YTPlayerView.m in Sources */,
+				AEF0F71C1D8E273400FE9C9B /* SCRResultsViewController.m in Sources */,
 				CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
