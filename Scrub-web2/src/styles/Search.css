@@ -17,22 +17,25 @@ button {
   color: #4DB3E6;
   font-size: 4em;
   line-height: 2.5em;
-  margin-top: 10%;
+  margin-top: 5%;
 }
 
 .item {
-  background: #cccccc;
+  background: white;
   color: black;
+  font-size: 1.5em;
 }
 
 .item_even {
-  background: #f2f2f2;
+  background: white;
   color: black;
+  font-size: 1.5em;
 }
 
 .item:hover, .item_even:hover {
   background: #737373;
   color: #f2f2f2;
+  font-size: 3em;
 }
 
 .linklist-component {
@@ -40,4 +43,11 @@ button {
   margin-top: 5%;
   text-align: center;
   width:30%;
+  overflow: auto;
+  height: 250px;
+}
+
+a{
+  color: #4DB3E6;
+  text-decoration: none;
 }

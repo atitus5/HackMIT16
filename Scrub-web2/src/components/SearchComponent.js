@@ -10,7 +10,7 @@ var $ = require('jquery');
 class LinkList extends React.Component{
   renderItem(index, key) {
     return <div key={key} className={'item' + (index % 2 ? '' : '_even')}f>
-      <a href={this.props.links[index]} target="blank">{index}</a>
+      <a href={this.props.links[index]} target="blank">{this.props.links[index].split("t=")[1]}</a>
     </div>;
   }
 
