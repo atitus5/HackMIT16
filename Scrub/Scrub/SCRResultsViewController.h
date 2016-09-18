@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class SCRResultsViewController;
+
+@protocol SCRResultsViewControllerDelegate <NSObject>
+
+- (void)viewControllerWillDismiss:(SCRResultsViewController *)vc;
+
+@end
+
 @interface SCRResultsViewController : UIViewController
 
-- (instancetype)initWithURLArray:(NSArray<NSString *> *)urlArray;
+- (instancetype)initWithDelegate:(id<SCRResultsViewControllerDelegate>)delegate urlArray:(NSArray<NSString *> *)urlArray;
 
 @end
