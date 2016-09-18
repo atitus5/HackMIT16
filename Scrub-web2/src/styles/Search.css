@@ -1,0 +1,21 @@
+.search-component {
+  
+  margin: auto;
+  text-align: center;
+  display: block;
+}
+
+.searchbar-component {
+  display: block;
+}
+
+button {
+  border-radius: 50%;
+  border: none;
+  text-align: center;
+  background: white;
+  color: #4DB3E6;
+  font-size: 4em;
+  line-height: 2.5em;
+  margin-top: 10%;
+}

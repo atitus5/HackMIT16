@@ -1,0 +1,10 @@
+/* Base Application Styles */
+body {
+  color: #fff;
+  background: #4DB3E6;
+  font-family: 'Bree Serif', serif;
+}
+
+.index {
+  height: 100%;
+}
