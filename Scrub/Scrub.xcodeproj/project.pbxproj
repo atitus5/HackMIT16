@@ -7,21 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AEF0F70C1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F70B1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf */; };
 		CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3A1D8DBEF500EA2CA6 /* main.m */; };
 		CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */; };
-		CA0FFA411D8DBEF500EA2CA6 /* SCRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA401D8DBEF500EA2CA6 /* SCRViewController.m */; };
+		CA0FFA411D8DBEF500EA2CA6 /* SCRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */; };
 		CA0FFA461D8DBEF500EA2CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */; };
 		CA0FFA491D8DBEF500EA2CA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */; };
 		CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AEF0F70B1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BreeSerif-Regular.ttf"; path = "../../Bree_Serif/BreeSerif-Regular.ttf"; sourceTree = "<group>"; };
 		CA0FFA361D8DBEF500EA2CA6 /* Scrub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA0FFA3A1D8DBEF500EA2CA6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CA0FFA3C1D8DBEF500EA2CA6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		CA0FFA3F1D8DBEF500EA2CA6 /* SCRViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCRViewController.h; sourceTree = "<group>"; };
-		CA0FFA401D8DBEF500EA2CA6 /* SCRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCRViewController.m; sourceTree = "<group>"; };
+		CA0FFA3F1D8DBEF500EA2CA6 /* SCRHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCRHomeViewController.h; sourceTree = "<group>"; };
+		CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCRHomeViewController.m; sourceTree = "<group>"; };
 		CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA0FFA481D8DBEF500EA2CA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -40,6 +42,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AEF0F70A1D8DEDC200FE9C9B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0F70B1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		CA0FFA2D1D8DBEF400EA2CA6 = {
 			isa = PBXGroup;
 			children = (
@@ -61,13 +71,14 @@
 			children = (
 				CA0FFA3C1D8DBEF500EA2CA6 /* AppDelegate.h */,
 				CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */,
-				CA0FFA3F1D8DBEF500EA2CA6 /* SCRViewController.h */,
-				CA0FFA401D8DBEF500EA2CA6 /* SCRViewController.m */,
+				CA0FFA3F1D8DBEF500EA2CA6 /* SCRHomeViewController.h */,
+				CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */,
 				CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */,
 				CA0FFA521D8DC8C500EA2CA6 /* SCRXMLReader.m */,
 				CA0FFA451D8DBEF500EA2CA6 /* Assets.xcassets */,
 				CA0FFA471D8DBEF500EA2CA6 /* LaunchScreen.storyboard */,
 				CA0FFA4A1D8DBEF500EA2CA6 /* Info.plist */,
+				AEF0F70A1D8DEDC200FE9C9B /* Resources */,
 				CA0FFA391D8DBEF500EA2CA6 /* Supporting Files */,
 			);
 			path = Scrub;
@@ -141,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA0FFA491D8DBEF500EA2CA6 /* LaunchScreen.storyboard in Resources */,
+				AEF0F70C1D8DEDDD00FE9C9B /* BreeSerif-Regular.ttf in Resources */,
 				CA0FFA461D8DBEF500EA2CA6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,7 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA0FFA411D8DBEF500EA2CA6 /* SCRViewController.m in Sources */,
+				CA0FFA411D8DBEF500EA2CA6 /* SCRHomeViewController.m in Sources */,
 				CA0FFA531D8DC8C500EA2CA6 /* SCRXMLReader.m in Sources */,
 				CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */,
 				CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */,
