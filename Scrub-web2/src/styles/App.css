@@ -1,21 +1,10 @@
 /* Base Application Styles */
 body {
   color: #fff;
-  background: #222;
+  background: #4DB3E6;
+  font-family: 'Bree Serif', serif;
 }
 
-.index img {
-  margin: 40px auto;
-  border-radius: 4px;
-  background: #fff;
-  display: block;
-}
-
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  background: #666;
+.index {
+  height: 100%;
 }
