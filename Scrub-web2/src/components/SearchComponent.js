@@ -39,7 +39,7 @@ var SearchBar = React.createClass({
     return (
       <div className="search-component">
         <p>Phrase</p>
-        <form>
+        <form id="forms">
           <input
             type="text"
             placeholder="Phrase..."
@@ -49,7 +49,7 @@ var SearchBar = React.createClass({
           />
         </form>
         <p>YouTube URL</p>
-        <form>
+        <form id="forms2">
           <input
             type="text"
             placeholder="Search..."
@@ -114,6 +114,12 @@ var watchUrlToXmlUrl = function(watchUrl) {
     return matchedWatchUrlsMap;
   }
 
+$(document).keypress(function(e){
+    if (e.which == 13){
+        $("#scrub").click();
+    }
+});
+
 var SearchComponent = new React.createClass({
   getInitialState(){
     return {
@@ -122,6 +128,15 @@ var SearchComponent = new React.createClass({
       links: [],
       showList: false
     };
+  },
+
+  componentDidMount(){
+    document.getElementById('forms').addEventListener('submit', function(e) {
+        e.preventDefault();
+    }, false);
+    document.getElementById('forms2').addEventListener('submit', function(e) {
+        e.preventDefault();
+    }, false);
   },
 
   handleUserInput(phraseText, videoLink) {
@@ -161,7 +176,7 @@ var SearchComponent = new React.createClass({
           videoLink={this.state.videoLink}
           onUserInput={this.handleUserInput}
         />
-        <button onClick={this.scrub}>Scrub</button>
+        <button id="scrub" onClick={this.scrub}>Scrub</button>
         <div style={{display: disp}}>
           <LinkList
             links={this.state.links} 
