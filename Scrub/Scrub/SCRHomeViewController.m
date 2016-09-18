@@ -20,9 +20,8 @@
 #define FIELD_FONTSIZE 20.0
 #define BUTTON_RADIUS 75.0
 #define BUTTON_FONTSIZE 40.0
-#define SELECTED_ALPHA 0.7
 
-@interface SCRHomeViewController () <UITextFieldDelegate>
+@interface SCRHomeViewController () <UITextFieldDelegate, SCRResultsViewControllerDelegate>
 
 @property (nonatomic) UILabel *welcomeLabel;
 @property (nonatomic) UILabel *instructionLabel;
@@ -122,17 +121,17 @@
     [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0] forState:UIControlStateNormal];
     [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:SELECTED_ALPHA] forState:UIControlStateSelected];
     [[_scrubButton layer] setCornerRadius:BUTTON_RADIUS];
+    [_scrubButton setShowsTouchWhenHighlighted:YES];
     [_scrubButton addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [[self view] addSubview:_scrubButton];
     
     // Set up queue and activity indicator for network data fetching
     _homeQueue = dispatch_queue_create("com.drewtitus.Scrub.homeQueue", NULL);
     _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [_indicator setFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
+    [_indicator setFrame:CGRectMake(0.0, 0.0, INDICATOR_SIZE, INDICATOR_SIZE)];
     [_indicator setCenter:[[self view] center]];
     [[self view] addSubview:_indicator];
     [_indicator bringSubviewToFront:[self view]];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:TRUE];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -148,6 +147,16 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark - SCRResultsViewControllerDelegate
+
+- (void)viewControllerWillDismiss:(SCRResultsViewController *)vc {
+    // Clear fields so that they we get a fresh interface upon return
+    [_phraseField setText:@""];
+    [_urlField setText:@""];
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 #pragma mark - Private
@@ -181,10 +190,12 @@
         }
         
         if (videoId) {
+            //NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?lang=en&v=%@", videoId];
             NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?lang=en&v=%@", videoId];
             
             // Start network fetch of XML caption data
             [_indicator startAnimating];
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             dispatch_async(_homeQueue, ^{
                 NSDictionary *dictionary = _getXMLDict(captionUrlString);
                 
@@ -194,15 +205,24 @@
                 // Update UI - must be on main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [_indicator stopAnimating];
+                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                     if ([formattedDictionary count] != 0) {
-                        // Show the results!
+                        // Get results!
                         NSArray *timesArray = _getTimesOfPhrase(formattedDictionary, phrase);
-                        NSArray *youtubeUrlArray = _getYoutubeUrls(videoId, timesArray);
                         
-                        //NSLog(@"%@", youtubeUrlArray);
-                        
-                        SCRResultsViewController *resultsVC = [[SCRResultsViewController alloc] initWithURLArray:youtubeUrlArray];
-                        [self presentViewController:resultsVC animated:YES completion:nil];
+                        if ([timesArray count] != 0) {
+                            NSArray *youtubeUrlArray = _getYoutubeUrls(videoId, timesArray);
+                            
+                            //NSLog(@"%@", youtubeUrlArray);
+                            
+                            [self presentViewController:[[SCRResultsViewController alloc] initWithDelegate: self urlArray:youtubeUrlArray]
+                                               animated:NO
+                                             completion:nil];
+                        } else {
+                            // Notify user of lack of results
+                            [self _presentAlert:@"No results found"
+                                        message:[NSString stringWithFormat:@"No dialogue data found for this URL and the phrase \"%@\". Please try a different URL and/or phrase.", phrase]];
+                        }
                     } else {
                         // Notify user of lack of caption data... sigh...
                         [self _presentAlert:@"No dialogue data found"
