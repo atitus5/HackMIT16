@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+@protocol SCRViewControllerDismissalDelegate <NSObject>
+
+- (void)viewControllerWillDismiss:(UIViewController *)vc;
+
+@end
+
 @interface SCRHomeViewController : UIViewController
 
 @end

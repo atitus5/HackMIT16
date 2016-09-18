@@ -12,6 +12,8 @@
 		AEF0F7171D8E25FF00FE9C9B /* SCRAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F7161D8E25FF00FE9C9B /* SCRAssets.xcassets */; };
 		AEF0F7191D8E26A000FE9C9B /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AEF0F7181D8E26A000FE9C9B /* Assets.bundle */; };
 		AEF0F71C1D8E273400FE9C9B /* SCRResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */; };
+		AEF0F7221D8E8A4E00FE9C9B /* SCRVideoTranscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF0F7211D8E8A4E00FE9C9B /* SCRVideoTranscriber.m */; };
+		AEF0F7271D8E8C1C00FE9C9B /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEF0F7251D8E8C1C00FE9C9B /* Speech.framework */; };
 		CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3A1D8DBEF500EA2CA6 /* main.m */; };
 		CA0FFA3E1D8DBEF500EA2CA6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */; };
 		CA0FFA411D8DBEF500EA2CA6 /* SCRHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */; };
@@ -27,6 +29,10 @@
 		AEF0F7181D8E26A000FE9C9B /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
 		AEF0F71A1D8E273400FE9C9B /* SCRResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCRResultsViewController.h; sourceTree = "<group>"; };
 		AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCRResultsViewController.m; sourceTree = "<group>"; };
+		AEF0F7201D8E8A4E00FE9C9B /* SCRVideoTranscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCRVideoTranscriber.h; sourceTree = "<group>"; };
+		AEF0F7211D8E8A4E00FE9C9B /* SCRVideoTranscriber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCRVideoTranscriber.m; sourceTree = "<group>"; };
+		AEF0F7241D8E8C1C00FE9C9B /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		AEF0F7251D8E8C1C00FE9C9B /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		CA0FFA361D8DBEF500EA2CA6 /* Scrub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA0FFA3A1D8DBEF500EA2CA6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CA0FFA3C1D8DBEF500EA2CA6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEF0F7271D8E8C1C00FE9C9B /* Speech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,11 +75,21 @@
 			name = YouTube;
 			sourceTree = "<group>";
 		};
+		AEF0F7231D8E8C1B00FE9C9B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0F7241D8E8C1C00FE9C9B /* MediaPlayer.framework */,
+				AEF0F7251D8E8C1C00FE9C9B /* Speech.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CA0FFA2D1D8DBEF400EA2CA6 = {
 			isa = PBXGroup;
 			children = (
 				CA0FFA381D8DBEF500EA2CA6 /* Scrub */,
 				CA0FFA371D8DBEF500EA2CA6 /* Products */,
+				AEF0F7231D8E8C1B00FE9C9B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +108,8 @@
 				CA0FFA3D1D8DBEF500EA2CA6 /* AppDelegate.m */,
 				CA0FFA3F1D8DBEF500EA2CA6 /* SCRHomeViewController.h */,
 				CA0FFA401D8DBEF500EA2CA6 /* SCRHomeViewController.m */,
+				AEF0F7201D8E8A4E00FE9C9B /* SCRVideoTranscriber.h */,
+				AEF0F7211D8E8A4E00FE9C9B /* SCRVideoTranscriber.m */,
 				AEF0F71A1D8E273400FE9C9B /* SCRResultsViewController.h */,
 				AEF0F71B1D8E273400FE9C9B /* SCRResultsViewController.m */,
 				CA0FFA511D8DC8C500EA2CA6 /* SCRXMLReader.h */,
@@ -192,6 +211,7 @@
 				AEF0F7131D8E244A00FE9C9B /* YTPlayerView.m in Sources */,
 				AEF0F71C1D8E273400FE9C9B /* SCRResultsViewController.m in Sources */,
 				CA0FFA3B1D8DBEF500EA2CA6 /* main.m in Sources */,
+				AEF0F7221D8E8A4E00FE9C9B /* SCRVideoTranscriber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

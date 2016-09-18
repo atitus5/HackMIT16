@@ -8,16 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "SCRHomeViewController.h"
+
 @class SCRResultsViewController;
-
-@protocol SCRResultsViewControllerDelegate <NSObject>
-
-- (void)viewControllerWillDismiss:(SCRResultsViewController *)vc;
-
-@end
 
 @interface SCRResultsViewController : UIViewController
 
-- (instancetype)initWithDelegate:(id<SCRResultsViewControllerDelegate>)delegate urlArray:(NSArray<NSString *> *)urlArray;
+- (instancetype)initWithDelegate:(id<SCRViewControllerDismissalDelegate>)delegate urlArray:(NSArray<NSString *> *)urlArray;
 
 @end
