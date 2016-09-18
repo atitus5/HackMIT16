@@ -10,23 +10,16 @@ var $ = require('jquery');
 
 var SearchBar = React.createClass({
   componentDidMount(){
-    var timesMap = new Map();
-    var x = new XMLHttpRequest();
-      x.open("GET", "https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0", true);
-      x.onreadystatechange = function () {
-        if (x.readyState == 4 && x.status == 200)
-        {
-          var doc = x.responseXML;
-          console.log("XML? = ", doc);
-          console.log("XML type = ", doc.constructor);
-          console.log("XML.element = ", doc.documentElement);
-          console.log("XML type = ", doc.constructor);
-          doc.documentElement.outerHTML.content("text").each(function (textDom) {
-            //timesMap.set(textDom.attr);
-          });
-        }
-      };
-      x.send(null);
+    $.ajax({
+      url: 'https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0',
+      dataType: 'xml',
+      success: function(xml) {
+        var xmlDoc = $.parseXML( xml ),
+        $xml = $( xmlDoc ),
+        $text = $xml.find( 'text' );
+        console.log($text.text());
+      }
+    });
   },
 
   handleChange() {
