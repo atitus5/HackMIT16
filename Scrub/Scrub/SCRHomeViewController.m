@@ -12,7 +12,10 @@
 
 #import "AppDelegate.h"
 #import "SCRResultsViewController.h"
+#import "SCRVideoTranscriber.h"
 #import "SCRXMLReader.h"
+
+@import MediaPlayer;
 
 #define MARGIN 30.0
 #define WELCOME_LABEL_FONTSIZE 37.0
@@ -21,7 +24,7 @@
 #define BUTTON_RADIUS 75.0
 #define BUTTON_FONTSIZE 40.0
 
-@interface SCRHomeViewController () <UITextFieldDelegate, SCRResultsViewControllerDelegate>
+@interface SCRHomeViewController () <UITextFieldDelegate, SCRViewControllerDismissalDelegate, MPMediaPickerControllerDelegate>
 
 @property (nonatomic) UILabel *welcomeLabel;
 @property (nonatomic) UILabel *instructionLabel;
@@ -30,8 +33,9 @@
 @property (nonatomic) UILabel *urlLabel;
 @property (nonatomic) UITextField *urlField;
 @property (nonatomic) UIButton *scrubButton;
+@property (nonatomic) UIButton *customVideoButton;
 @property (nonatomic) UIActivityIndicatorView *indicator;
-@property (nonatomic) dispatch_queue_t homeQueue;
+@property (nonatomic) dispatch_queue_t workQueue;
 
 @end
 
@@ -125,8 +129,20 @@
     [_scrubButton addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [[self view] addSubview:_scrubButton];
     
+    // (Temporarily) put video upload button in bottom left
+    _customVideoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGFloat videoButtonSize = (widthInsideMargins - (2.0 * BUTTON_RADIUS)) / 2.0;
+    [_customVideoButton setFrame:CGRectMake(MARGIN, [_scrubButton frame].origin.y + BUTTON_RADIUS, videoButtonSize, videoButtonSize)];
+    [_customVideoButton setBackgroundColor:[UIColor whiteColor]];
+    [_customVideoButton setImage:[UIImage imageNamed:@"Arrow"] forState:UIControlStateNormal];
+    //[_customVideoButton setTransform:CGAffineTransformMakeRotation(90.0)];
+    [_customVideoButton addTarget:self
+                           action:@selector(_selectVideo:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    [[self view] addSubview:_customVideoButton];
+    
     // Set up queue and activity indicator for network data fetching
-    _homeQueue = dispatch_queue_create("com.drewtitus.Scrub.homeQueue", NULL);
+    _workQueue = dispatch_queue_create("com.drewtitus.Scrub.workQueue", NULL);
     _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [_indicator setFrame:CGRectMake(0.0, 0.0, INDICATOR_SIZE, INDICATOR_SIZE)];
     [_indicator setCenter:[[self view] center]];
@@ -152,14 +168,35 @@
 #pragma mark - SCRResultsViewControllerDelegate
 
 - (void)viewControllerWillDismiss:(SCRResultsViewController *)vc {
-    // Clear fields so that they we get a fresh interface upon return
-    [_phraseField setText:@""];
-    [_urlField setText:@""];
-    
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
+#pragma mark - MPMediaPickerControllerDelegate
+
+- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    MPMediaItem *theVideo = [[mediaItemCollection items] lastObject];
+    
+    // Transcribe the video!
+    [_indicator startAnimating];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    dispatch_async(_workQueue, ^{
+        NSArray<NSURL *> *results = [[SCRVideoTranscriber sharedInstance] transcribeVideoAtURL:[theVideo assetURL]];
+        NSLog(@"%@", results);
+    });
+}
+
 #pragma mark - Private
+
+- (void)_selectVideo:(UIButton *)button {
+    MPMediaPickerController *mpc = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyVideo];
+    [mpc setPrompt:@"Select a video to search by dialogue"];
+    [mpc setAllowsPickingMultipleItems:NO];
+    [mpc setDelegate:self];
+    
+    [self presentViewController:mpc animated:YES completion:nil];
+}
 
 - (void)_presentAlert:(NSString *)title message:(NSString *)message {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
@@ -196,7 +233,7 @@
             // Start network fetch of XML caption data
             [_indicator startAnimating];
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-            dispatch_async(_homeQueue, ^{
+            dispatch_async(_workQueue, ^{
                 NSDictionary *dictionary = _getXMLDict(captionUrlString);
                 
                 // Change dict to form: {time1:value1, tiem2:value2}
@@ -218,6 +255,10 @@
                             [self presentViewController:[[SCRResultsViewController alloc] initWithDelegate: self urlArray:youtubeUrlArray]
                                                animated:NO
                                              completion:nil];
+                            
+                            // Clear fields so that they we get a fresh interface upon return
+                            [_phraseField setText:@""];
+                            [_urlField setText:@""];
                         } else {
                             // Notify user of lack of results
                             [self _presentAlert:@"No results found"

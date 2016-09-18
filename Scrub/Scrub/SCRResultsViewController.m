@@ -22,7 +22,7 @@
 
 @interface SCRResultsViewController () <UITextViewDelegate, YTPlayerViewDelegate>
 
-@property (nonatomic, weak) id<SCRResultsViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<SCRViewControllerDismissalDelegate> delegate;
 @property (nonatomic) NSArray *urlArray;
 @property (nonatomic) NSString *videoId;
 @property (nonatomic) NSArray<NSNumber *> *timestamps;
@@ -41,7 +41,7 @@
 
 @implementation SCRResultsViewController
 
-- (instancetype)initWithDelegate:(id<SCRResultsViewControllerDelegate>)delegate urlArray:(NSArray<NSString *> *)urlArray {
+- (instancetype)initWithDelegate:(id<SCRViewControllerDismissalDelegate>)delegate urlArray:(NSArray<NSString *> *)urlArray {
     self = [self init];
     if (self) {
         _delegate = delegate;

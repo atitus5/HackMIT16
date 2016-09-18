@@ -47,5 +47,9 @@
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Scrub uses Speech to process and search video files for dialogue.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Scrub uses Videos to process and search their contained dialogue.</string>
 </dict>
 </plist>
