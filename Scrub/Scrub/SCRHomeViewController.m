@@ -132,10 +132,11 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
 #pragma mark - Public
 
 - (void)buttonPressed:(UIButton *) button {
+    NSString *phrase = @"that";
     NSString *videoId = @"zGb9smintY0";
-    NSString *urlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
-
-    NSDictionary *dictionary = getXMLDict(urlString);
+    NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
+    
+    NSDictionary *dictionary = getXMLDict(captionUrlString);
     
     //NSLog(@"%@", dictionary);
     
@@ -143,6 +144,13 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
     NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
     
     NSLog(@"formatted dict= %@", formattedDictionary);
+    
+    NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
+    
+    NSLog(@"%@", timesArray);
+    
+    NSArray *youtubeUrlArray = getYoutubeUrls(videoId, timesArray);
+    NSLog(@"youtubeUrlArray: %@", youtubeUrlArray);
 }
 
 /**
@@ -156,7 +164,7 @@ NSDictionary* getXMLDict(NSString* urlString) {
 }
 
 /**
- * @return: dictionary of the form {time1:value1, time2:value2, ...}
+ * @return: dictionary of the form {time1:value1, tiem2:value2, ...}
  */
 NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
     NSMutableDictionary* formattedDict = [NSMutableDictionary dictionaryWithDictionary:@{}];
@@ -179,20 +187,49 @@ NSDictionary* formatYoutubeCaptionDict(NSDictionary* dictionary) {
     return formattedDict;
 }
 
+/**
+ * @param dictionary : of the form {"0":"hi", "1.5":"welcome"} where the numbers are times
+ *                      in seconds and the strings are the dialouge during that time
+ * @param phrase : a phrase to be matched in the dictionary values
+ * @return: list of times where phrase appeared. Case insensitive search
+ */
 NSMutableArray* getTimesOfPhrase(NSDictionary* dictionary, NSString* phrase) {
+    phrase = [phrase lowercaseString];
     NSMutableArray *times = [NSMutableArray array];
     
     [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL* stop) {
-        
-        if ([value rangeOfString:phrase].location == NSNotFound) {
+        if ([[value lowercaseString] rangeOfString:phrase].location == NSNotFound) {
         } else {
             [times addObject:key];
         }
-        
     }];
     
     return times;
 }
 
+/**
+ *
+ */
+NSArray* getYoutubeUrls(NSString *videoId, NSArray *times) {
+    
+    // Need to construct: "https://youtu.be/ <videoId> ?t= <timeInSeconds> s
+    NSMutableString *youtubeWatchUrl = [@"https://youtu.be/" mutableCopy];
+    [youtubeWatchUrl appendString:videoId];
+    [youtubeWatchUrl appendString:[@"?t=" mutableCopy]];
+    
+    NSMutableArray *youtubeUrlsArray = [NSMutableArray array];
+    
+    // Iterate through times:
+    for (NSString* time in times) {
+        NSMutableString *youtubeWatchUrlFull = [youtubeWatchUrl mutableCopy];
+        NSInteger timeInt = [time integerValue];
+        NSString *timeString = [NSString stringWithFormat: @"%ld", (long)timeInt];
+        [youtubeWatchUrlFull appendString:timeString];
+        [youtubeWatchUrlFull appendString:@"s"];
+        [youtubeUrlsArray addObject:youtubeWatchUrlFull];
+    }
+    
+    return youtubeUrlsArray;
+}
 
 @end
