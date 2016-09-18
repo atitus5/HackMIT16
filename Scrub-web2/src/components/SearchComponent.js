@@ -1,10 +1,31 @@
 'use strict';
 
 import React from 'react';
+import ReactList from 'react-list';
 
 require('styles//Search.css');
 
 var $ = require('jquery');
+
+class LinkList extends React.Component{
+  renderItem(index, key) {
+    return <div key={key} className={'item' + (index % 2 ? '' : '_even')}f>
+      <a href={this.props.links[index]} target="blank">{this.props.links[index].split("t=")[1]}</a>
+    </div>;
+  }
+
+  render() {
+    return (
+      <div className="linklist-component">
+        <ReactList
+            itemRenderer={::this.renderItem}
+            length={this.props.links.length}
+            type='uniform'
+        />
+      </div>
+    );
+  }
+};
 
 var SearchBar = React.createClass({
   handleChange() {
@@ -17,6 +38,7 @@ var SearchBar = React.createClass({
   render() {
     return (
       <div className="search-component">
+        <p>Phrase</p>
         <form>
           <input
             type="text"
@@ -25,6 +47,9 @@ var SearchBar = React.createClass({
             ref="phraseTextInput"
             onChange={this.handleChange}
           />
+        </form>
+        <p>YouTube URL</p>
+        <form>
           <input
             type="text"
             placeholder="Search..."
@@ -53,7 +78,7 @@ var watchUrlToXmlUrl = function(watchUrl) {
           var textElements = xmlDoc.getElementsByTagName("transcript")[0].getElementsByTagName("text");
 
           for (var i = 0; i < textElements.length; i++) {
-            var text = textElements.item(i).textContent;
+            var text = " " + textElements.item(i).textContent.toLowerCase();
             var start = textElements.item(i).attributes.getNamedItem("start").value;
 
             timesToTextMap.set(start, text);
@@ -70,7 +95,7 @@ var watchUrlToXmlUrl = function(watchUrl) {
     var timesOfPhraseArray = new Array();
 
     dictionary.forEach(function(value, key, map){
-      if (value.includes(phrase)) {
+      if (value.includes(" " + phrase)) {
         timesOfPhraseArray.push(key);
       };
     });
@@ -93,7 +118,9 @@ var SearchComponent = new React.createClass({
   getInitialState(){
     return {
       phraseText: 'open',
-      videoLink: 'https://www.youtube.com/watch?v=zGb9smintY0'
+      videoLink: 'https://www.youtube.com/watch?v=zGb9smintY0',
+      links: [],
+      showList: false
     };
   },
 
@@ -102,6 +129,9 @@ var SearchComponent = new React.createClass({
       phraseText: phraseText,
       videoLink: videoLink
     });
+    console.log("phrase: " + this.state.phraseText);
+    console.log("video: " + this.state.videoLink);
+    console.log("links: " + this.state.links);
   },
 
   scrub(){
@@ -110,18 +140,33 @@ var SearchComponent = new React.createClass({
     var timesMap = getTimesMapFromXmlUrl(xmlUrl);
     var phraseTimesMap = getTimesOfPhrase(timesMap, this.state.phraseText);
     var matchedWatchUrlsArray = convertTimesToUrls(phraseTimesMap, this.state.videoLink);
+    this.setState({
+      links: matchedWatchUrlsArray,
+      showList: true
+    })
     console.log("matchedWatchUrlsMap=",matchedWatchUrlsArray);
   },
 
   render() {
+    var disp='none';
+    if(this.state.showList){
+      disp='block';
+    }
     return (
       <div className="search-component">
+        <h1>Welcome to Scrub!</h1>
+        <h7>Search YouTube by dialogue content with ease!</h7>
         <SearchBar
           phraseText={this.state.phraseText}
           videoLink={this.state.videoLink}
           onUserInput={this.handleUserInput}
         />
         <button onClick={this.scrub}>Scrub</button>
+        <div style={{display: disp}}>
+          <LinkList
+            links={this.state.links} 
+          />
+        </div>
       </div>
     );
   }
