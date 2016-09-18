@@ -75,6 +75,8 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
     [_phraseField setBackgroundColor:[UIColor whiteColor]];
     [_phraseField setBorderStyle:UITextBorderStyleRoundedRect];
     [_phraseField setPlaceholder:@"Enter a phrase"];
+    [_phraseField setKeyboardType:UIKeyboardTypeDefault];
+    [_phraseField setReturnKeyType:UIReturnKeyDone];
     [_phraseField setDelegate:self];
     [[self view] addSubview:_phraseField];
     
@@ -95,6 +97,8 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
     [_urlField setBackgroundColor:[UIColor whiteColor]];
     [_urlField setBorderStyle:UITextBorderStyleRoundedRect];
     [_urlField setPlaceholder:@"Enter a YouTube URL"];
+    [_urlField setKeyboardType:UIKeyboardTypeURL];
+    [_urlField setReturnKeyType:UIReturnKeyDone];
     [_urlField setDelegate:self];
     [[self view] addSubview:_urlField];
     
@@ -127,30 +131,85 @@ static NSString *kScrubFont = @"BreeSerif-Regular";
 
 #pragma mark - UITextFieldDelegate
 
-
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
 
 #pragma mark - Public
 
 - (void)buttonPressed:(UIButton *) button {
-    NSString *phrase = @"that";
-    NSString *videoId = @"zGb9smintY0";
-    NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?&lang=en&v=%@", videoId];
-    
-    NSDictionary *dictionary = getXMLDict(captionUrlString);
-    
-    //NSLog(@"%@", dictionary);
-    
-    // Change dict to form: {time1:value1, tiem2:value2}
-    NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
-    
-    NSLog(@"formatted dict= %@", formattedDictionary);
-    
-    NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
-    
-    NSLog(@"%@", timesArray);
-    
-    NSArray *youtubeUrlArray = getYoutubeUrls(videoId, timesArray);
-    NSLog(@"youtubeUrlArray: %@", youtubeUrlArray);
+    NSString *phrase = [_phraseField text];
+    if ([phrase length] != 0) {
+        NSURLComponents *youtubeURLComps = [[NSURLComponents alloc] initWithString:[_urlField text]];
+        NSArray<NSURLQueryItem *> *youtubeQueryItems = [youtubeURLComps queryItems];
+        NSString *videoId = nil;
+        for (NSURLQueryItem *item in youtubeQueryItems) {
+            if ([[item name] isEqualToString:@"v"]) {
+                videoId = [item value];
+                break;
+            }
+        }
+        if (!videoId) {
+            // May be a shortened mobile URL - get the video ID from the path
+            // Example: https://youtu.be/uXt8qF2Zzfo -> /uXt8qF2Zzfo -> uXt8qF2Zzfo
+            videoId = [[youtubeURLComps path] substringFromIndex:1];
+        }
+        
+        if (videoId) {
+            NSString *captionUrlString = [NSString stringWithFormat:@"https://www.youtube.com/api/timedtext?lang=en&v=%@", videoId];
+            
+            NSDictionary *dictionary = getXMLDict(captionUrlString);
+            
+            //NSLog(@"%@", dictionary);
+            
+            // Change dict to form: {time1:value1, tiem2:value2}
+            NSDictionary *formattedDictionary = formatYoutubeCaptionDict(dictionary);
+            
+            if ([formattedDictionary count] != 0) {
+                //NSLog(@"formatted dict= %@", formattedDictionary);
+                NSArray *timesArray = getTimesOfPhrase(formattedDictionary, phrase);
+                //NSLog(@"%@", timesArray);
+                NSArray *youtubeUrlArray = getYoutubeUrls(videoId, timesArray);
+                NSLog(@"youtubeUrlArray: %@", youtubeUrlArray);
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Woo, URLs!"
+                                                                               message:[NSString stringWithFormat:@"%@", youtubeUrlArray]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+                
+                [alert addAction:dismissAction];
+                [self presentViewController:alert animated:YES completion:nil];
+            } else {
+                // Notify user of lack of caption data... sigh...
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No dialogue data found"
+                                                                               message:@"No dialogue data found for this URL. This could be due to copyright issues, sadly..."
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+                
+                [alert addAction:dismissAction];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        } else {
+            // Notify user of URL error
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter YouTube URL"
+                                                                           message:@"Please enter a YouTube URL"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+            
+            [alert addAction:dismissAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    } else {
+        // Notify user of phrase error
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter a phrase"
+                                                                       message:@"Please enter a phrase (for example, \"There's always money in the banana stand\""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+        
+        [alert addAction:dismissAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 /**
