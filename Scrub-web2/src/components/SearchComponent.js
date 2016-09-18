@@ -38,49 +38,19 @@ var SearchBar = React.createClass({
   }
 });
 
-var SearchComponent = new React.createClass({
-  getInitialState(){
-    return {
-      phraseText: '',
-      videoLink: ''
-    };
-  },
+var watchUrlToXmlUrl = function(watchUrl) {
+    return 'https://www.youtube.com/api/timedtext?&lang=en&v=' + watchUrl.split("v=")[1];
+  };
 
-  handleUserInput(phraseText, videoLink) {
-    this.setState({
-      phraseText: phraseText,
-      videoLink: videoLink
-    });
-    console.log('phrase: ' + phraseText);
-    console.log('video: '+ videoLink)
-  },
-
-  watchUrlToXmlUrl(watchUrl) {
-
-
-    return xmlUrl;
-  },
-
-  scrub(){
-
-    var watchUrl = watchUrlToXmlUrl(this.state.videoLink);
-    
-
-
-
+  var getTimesMapFromXmlUrl = function(xmlUrl) {
     var x = new XMLHttpRequest();
     var timesToTextMap = new Map();
-      x.open("GET", "https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0", true);
+      x.open("GET", xmlUrl, false);
       x.onreadystatechange = function () {
         if (x.readyState == 4 && x.status == 200)
         {
           var xmlDoc = x.responseXML;
           var textElements = xmlDoc.getElementsByTagName("transcript")[0].getElementsByTagName("text");
-
-          console.log("textElements = ", textElements);
-          console.log("textElements.constructor = ", textElements.constructor);
-
-          console.log("textElements.item(2) = ", textElements.item(2));
 
           for (var i = 0; i < textElements.length; i++) {
             var text = textElements.item(i).textContent;
@@ -90,9 +60,57 @@ var SearchComponent = new React.createClass({
           }
         }
       };
-
-      console.log("timesToTextMap = ", timesToTextMap);
       x.send(null);
+
+      return timesToTextMap;
+  };
+
+  var getTimesOfPhrase = function(dictionary, phrase) {
+    phrase = phrase.toLowerCase().trim(); // Sanitize
+    var timesOfPhraseArray = new Array();
+
+    dictionary.forEach(function(value, key, map){
+      if (value.includes(phrase)) {
+        timesOfPhraseArray.push(key);
+      };
+    });
+    
+    return timesOfPhraseArray;
+  };
+
+  var convertTimesToUrls = function(phraseTimesMap, originalUrl) {
+    var matchedWatchUrlsMap = new Array();
+
+    phraseTimesMap.forEach(function(time) {
+      var watchUrl = originalUrl + "&t=" + parseInt(time).toString() + "s";
+      matchedWatchUrlsMap.push(watchUrl);
+    });
+
+    return matchedWatchUrlsMap;
+  }
+
+var SearchComponent = new React.createClass({
+  getInitialState(){
+    return {
+      phraseText: 'open',
+      videoLink: 'https://www.youtube.com/watch?v=zGb9smintY0'
+    };
+  },
+
+  handleUserInput(phraseText, videoLink) {
+    this.setState({
+      phraseText: phraseText,
+      videoLink: videoLink
+    });
+  },
+
+  scrub(){
+    // Get the XML url
+    var xmlUrl = watchUrlToXmlUrl(this.state.videoLink);
+    var timesMap = getTimesMapFromXmlUrl(xmlUrl);
+    var phraseTimesMap = getTimesOfPhrase(timesMap, this.state.phraseText);
+    var matchedWatchUrlsArray = convertTimesToUrls(phraseTimesMap, this.state.videoLink);
+    console.log("matchedWatchUrlsMap=",matchedWatchUrlsArray);
   },
 
   render() {
