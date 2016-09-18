@@ -6,25 +6,30 @@
 //  Copyright © 2016 Drew Titus. All rights reserved.
 //
 
+/*
+ <div>Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+ */
+
 #import <QuartzCore/QuartzCore.h>
 
 #import "SCRHomeViewController.h"
+
+@import MobileCoreServices;
 
 #import "AppDelegate.h"
 #import "SCRResultsViewController.h"
 #import "SCRVideoTranscriber.h"
 #import "SCRXMLReader.h"
 
-@import MediaPlayer;
-
 #define MARGIN 30.0
 #define WELCOME_LABEL_FONTSIZE 37.0
 #define INSTRUCTION_LABEL_FONTSIZE 25.0
 #define FIELD_FONTSIZE 20.0
-#define BUTTON_RADIUS 75.0
+#define SCRUB_BUTTON_RADIUS 75.0
 #define BUTTON_FONTSIZE 40.0
+#define VIDEO_BUTTON_RADIUS 35.0
 
-@interface SCRHomeViewController () <UITextFieldDelegate, SCRViewControllerDismissalDelegate, MPMediaPickerControllerDelegate>
+@interface SCRHomeViewController () <UITextFieldDelegate, SCRViewControllerDismissalDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic) UILabel *welcomeLabel;
 @property (nonatomic) UILabel *instructionLabel;
@@ -52,101 +57,135 @@
     
     // Set up welcome label and instruction label in top third of screen
     CGRect welcomeLabelFrame = CGRectMake(MARGIN, MARGIN, widthInsideMargins, heightInsideMargins / 6.0);
-    _welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelFrame];
-    [_welcomeLabel setText:@"Welcome to Scrub!"];
-    [_welcomeLabel setFont:[UIFont fontWithName:kScrubFont size:WELCOME_LABEL_FONTSIZE]];
-    [_welcomeLabel setTextColor:[UIColor whiteColor]];
-    [_welcomeLabel setTextAlignment:NSTextAlignmentCenter];
-    [_welcomeLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [_welcomeLabel setNumberOfLines:-1]; // Unlimited lines
-    [[self view] addSubview:_welcomeLabel];
+    if (!_welcomeLabel) {
+        _welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelFrame];
+        [_welcomeLabel setText:@"Welcome to Scrub!"];
+        [_welcomeLabel setFont:[UIFont fontWithName:kScrubFont size:WELCOME_LABEL_FONTSIZE]];
+        [_welcomeLabel setTextColor:[UIColor whiteColor]];
+        [_welcomeLabel setTextAlignment:NSTextAlignmentCenter];
+        [_welcomeLabel setLineBreakMode:NSLineBreakByWordWrapping];
+        [_welcomeLabel setNumberOfLines:-1]; // Unlimited lines
+        [[self view] addSubview:_welcomeLabel];
+    } else {
+        [_welcomeLabel setFrame:welcomeLabelFrame];
+    }
     
     CGRect instructionLabelFrame = CGRectMake(MARGIN, MARGIN + (heightInsideMargins / 6.0), widthInsideMargins, heightInsideMargins / 6.0);
-    _instructionLabel = [[UILabel alloc] initWithFrame:instructionLabelFrame];
-    [_instructionLabel setText:@"Search YouTube by dialogue content with ease!"];
-    [_instructionLabel setFont:[UIFont fontWithName:kScrubFont size:INSTRUCTION_LABEL_FONTSIZE]];
-    [_instructionLabel setTextColor:[UIColor whiteColor]];
-    [_instructionLabel setTextAlignment:NSTextAlignmentCenter];
-    [_instructionLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [_instructionLabel setNumberOfLines:-1]; // Unlimited lines
-    [[self view] addSubview:_instructionLabel];
+    if (!_instructionLabel) {
+        _instructionLabel = [[UILabel alloc] initWithFrame:instructionLabelFrame];
+        [_instructionLabel setText:@"Search YouTube by dialogue content with ease!"];
+        [_instructionLabel setFont:[UIFont fontWithName:kScrubFont size:INSTRUCTION_LABEL_FONTSIZE]];
+        [_instructionLabel setTextColor:[UIColor whiteColor]];
+        [_instructionLabel setTextAlignment:NSTextAlignmentCenter];
+        [_instructionLabel setLineBreakMode:NSLineBreakByWordWrapping];
+        [_instructionLabel setNumberOfLines:-1]; // Unlimited lines
+        [[self view] addSubview:_instructionLabel];
+    } else {
+        [_instructionLabel setFrame:instructionLabelFrame];
+    }
     
     // Set up phrase and URL fields in middle third of screen
     CGRect phraseLabelFrame = CGRectMake(MARGIN, MARGIN + (heightInsideMargins / 3.0), widthInsideMargins, heightInsideMargins / 12.0);
-    _phraseLabel = [[UILabel alloc] initWithFrame:phraseLabelFrame];
-    [_phraseLabel setText:@"Phrase"];
-    [_phraseLabel setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
-    [_phraseLabel setTextColor:[UIColor whiteColor]];
-    [_phraseLabel setTextAlignment:NSTextAlignmentCenter];
-    [_phraseLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [_phraseLabel setNumberOfLines:-1]; // Unlimited lines
-    [[self view] addSubview:_phraseLabel];
+    if (!_phraseLabel) {
+        _phraseLabel = [[UILabel alloc] initWithFrame:phraseLabelFrame];
+        [_phraseLabel setText:@"Phrase"];
+        [_phraseLabel setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
+        [_phraseLabel setTextColor:[UIColor whiteColor]];
+        [_phraseLabel setTextAlignment:NSTextAlignmentCenter];
+        [_phraseLabel setLineBreakMode:NSLineBreakByWordWrapping];
+        [_phraseLabel setNumberOfLines:-1]; // Unlimited lines
+        [[self view] addSubview:_phraseLabel];
+    } else {
+        [_phraseLabel setFrame:phraseLabelFrame];
+    }
     
     CGRect phraseFieldFrame = CGRectMake(MARGIN, MARGIN + (heightInsideMargins / 3.0) + phraseLabelFrame.size.height, widthInsideMargins, heightInsideMargins / 12.0);
-    _phraseField = [[UITextField alloc] initWithFrame:phraseFieldFrame];
-    [_phraseField setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
-    [_phraseField setTextColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0]];
-    [_phraseField setBackgroundColor:[UIColor whiteColor]];
-    [_phraseField setBorderStyle:UITextBorderStyleRoundedRect];
-    [_phraseField setPlaceholder:@"Enter a phrase"];
-    [_phraseField setKeyboardType:UIKeyboardTypeDefault];
-    [_phraseField setReturnKeyType:UIReturnKeyDone];
-    [_phraseField setDelegate:self];
-    [[self view] addSubview:_phraseField];
+    if (!_phraseField) {
+        _phraseField = [[UITextField alloc] initWithFrame:phraseFieldFrame];
+        [_phraseField setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
+        [_phraseField setTextColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0]];
+        [_phraseField setBackgroundColor:[UIColor whiteColor]];
+        [_phraseField setBorderStyle:UITextBorderStyleRoundedRect];
+        [_phraseField setPlaceholder:@"Enter a phrase"];
+        [_phraseField setKeyboardType:UIKeyboardTypeDefault];
+        [_phraseField setReturnKeyType:UIReturnKeyDone];
+        [_phraseField setDelegate:self];
+        [[self view] addSubview:_phraseField];
+    } else {
+        [_phraseField setFrame:phraseFieldFrame];
+    }
     
     CGRect urlLabelFrame = CGRectMake(MARGIN, MARGIN + (heightInsideMargins / 2.0), widthInsideMargins, heightInsideMargins / 12.0);
-    _urlLabel = [[UILabel alloc] initWithFrame:urlLabelFrame];
-    [_urlLabel setText:@"YouTube URL"];
-    [_urlLabel setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
-    [_urlLabel setTextColor:[UIColor whiteColor]];
-    [_urlLabel setTextAlignment:NSTextAlignmentCenter];
-    [_urlLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [_urlLabel setNumberOfLines:-1]; // Unlimited lines
-    [[self view] addSubview:_urlLabel];
+    if (!_urlLabel) {
+        _urlLabel = [[UILabel alloc] initWithFrame:urlLabelFrame];
+        [_urlLabel setText:@"YouTube URL"];
+        [_urlLabel setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
+        [_urlLabel setTextColor:[UIColor whiteColor]];
+        [_urlLabel setTextAlignment:NSTextAlignmentCenter];
+        [_urlLabel setLineBreakMode:NSLineBreakByWordWrapping];
+        [_urlLabel setNumberOfLines:-1]; // Unlimited lines
+        [[self view] addSubview:_urlLabel];
+    } else {
+        [_urlLabel setFrame:urlLabelFrame];
+    }
     
     CGRect urlFieldFrame = CGRectMake(MARGIN, MARGIN + (heightInsideMargins / 2.0) + urlLabelFrame.size.height, widthInsideMargins, heightInsideMargins / 12.0);
-    _urlField = [[UITextField alloc] initWithFrame:urlFieldFrame];
-    [_urlField setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
-    [_urlField setTextColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0]];
-    [_urlField setBackgroundColor:[UIColor whiteColor]];
-    [_urlField setBorderStyle:UITextBorderStyleRoundedRect];
-    [_urlField setPlaceholder:@"Enter a YouTube URL"];
-    [_urlField setKeyboardType:UIKeyboardTypeURL];
-    [_urlField setReturnKeyType:UIReturnKeyDone];
-    [_urlField setDelegate:self];
-    [[self view] addSubview:_urlField];
+    if (!_urlField) {
+        _urlField = [[UITextField alloc] initWithFrame:urlFieldFrame];
+        [_urlField setFont:[UIFont fontWithName:kScrubFont size:FIELD_FONTSIZE]];
+        [_urlField setTextColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0]];
+        [_urlField setBackgroundColor:[UIColor whiteColor]];
+        [_urlField setBorderStyle:UITextBorderStyleRoundedRect];
+        [_urlField setPlaceholder:@"Enter a YouTube URL"];
+        [_urlField setKeyboardType:UIKeyboardTypeURL];
+        [_urlField setReturnKeyType:UIReturnKeyDone];
+        [_urlField setDelegate:self];
+        [[self view] addSubview:_urlField];
+    } else {
+        [_urlField setFrame:urlFieldFrame];
+    }
     
     // Put the "Scrub" button in the bottom third of the screen (ignoring bottom margin - looks weird otherwise)
-    _scrubButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_scrubButton setFrame:CGRectMake(([[UIScreen mainScreen] bounds].size.width / 2.0) - BUTTON_RADIUS, ([[UIScreen mainScreen] bounds].size.height * (5.0 / 6.0)) - BUTTON_RADIUS, 2.0 * BUTTON_RADIUS, 2.0 * BUTTON_RADIUS)];
-    [_scrubButton setTitle:@"SCRUB" forState:UIControlStateNormal];
-    [[_scrubButton titleLabel] setFont:[UIFont fontWithName:kScrubFont size:BUTTON_FONTSIZE]];
-    [_scrubButton setBackgroundColor:[UIColor whiteColor]];
-    [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0] forState:UIControlStateNormal];
-    [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:SELECTED_ALPHA] forState:UIControlStateSelected];
-    [[_scrubButton layer] setCornerRadius:BUTTON_RADIUS];
-    [_scrubButton setShowsTouchWhenHighlighted:YES];
-    [_scrubButton addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [[self view] addSubview:_scrubButton];
+    if (!_scrubButton) {
+        _scrubButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_scrubButton setTitle:@"SCRUB" forState:UIControlStateNormal];
+        [[_scrubButton titleLabel] setFont:[UIFont fontWithName:kScrubFont size:BUTTON_FONTSIZE]];
+        [_scrubButton setBackgroundColor:[UIColor whiteColor]];
+        [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:1.0] forState:UIControlStateNormal];
+        [_scrubButton setTitleColor:[UIColor colorWithRed:BG_R green:BG_G blue:BG_B alpha:SELECTED_ALPHA] forState:UIControlStateSelected];
+        [[_scrubButton layer] setCornerRadius:SCRUB_BUTTON_RADIUS];
+        [_scrubButton setShowsTouchWhenHighlighted:YES];
+        [_scrubButton addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [[self view] addSubview:_scrubButton];
+    }
+    [_scrubButton setFrame:CGRectMake(([[UIScreen mainScreen] bounds].size.width / 2.0) - SCRUB_BUTTON_RADIUS, ([[UIScreen mainScreen] bounds].size.height * (5.0 / 6.0)) - SCRUB_BUTTON_RADIUS, 2.0 * SCRUB_BUTTON_RADIUS, 2.0 * SCRUB_BUTTON_RADIUS)];
     
     // (Temporarily) put video upload button in bottom left
-    _customVideoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat videoButtonSize = (widthInsideMargins - (2.0 * BUTTON_RADIUS)) / 2.0;
-    [_customVideoButton setFrame:CGRectMake(MARGIN, [_scrubButton frame].origin.y + BUTTON_RADIUS, videoButtonSize, videoButtonSize)];
-    [_customVideoButton setBackgroundColor:[UIColor whiteColor]];
-    [_customVideoButton setImage:[UIImage imageNamed:@"Arrow"] forState:UIControlStateNormal];
-    //[_customVideoButton setTransform:CGAffineTransformMakeRotation(90.0)];
-    [_customVideoButton addTarget:self
-                           action:@selector(_selectVideo:)
-                 forControlEvents:UIControlEventTouchUpInside];
-    [[self view] addSubview:_customVideoButton];
+    BOOL sourceAvailable = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary];
+    BOOL videosAvailable = [[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary] containsObject:kUTTypeMovie];
+    if (sourceAvailable && videosAvailable) {
+        CGRect customVideoButtonFrame = CGRectMake(MARGIN, [_scrubButton frame].origin.y + ([_scrubButton frame].size.height / 2.0) - VIDEO_BUTTON_RADIUS, 2.0 * VIDEO_BUTTON_RADIUS, 2.0 * VIDEO_BUTTON_RADIUS);
+        if (!_customVideoButton) {
+            _customVideoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_customVideoButton setBackgroundColor:[UIColor whiteColor]];
+            [_customVideoButton setImage:[UIImage imageNamed:@"Microphone"] forState:UIControlStateNormal];
+            [[_customVideoButton layer] setCornerRadius:VIDEO_BUTTON_RADIUS];
+            [_customVideoButton addTarget:self
+                                   action:@selector(_selectVideo:)
+                         forControlEvents:UIControlEventTouchUpInside];
+            [[self view] addSubview:_customVideoButton];
+        }
+        [_customVideoButton setFrame:customVideoButtonFrame];
+    }
     
     // Set up queue and activity indicator for network data fetching
     _workQueue = dispatch_queue_create("com.drewtitus.Scrub.workQueue", NULL);
-    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    if (!_indicator) {
+        _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [[self view] addSubview:_indicator];
+    }
     [_indicator setFrame:CGRectMake(0.0, 0.0, INDICATOR_SIZE, INDICATOR_SIZE)];
     [_indicator setCenter:[[self view] center]];
-    [[self view] addSubview:_indicator];
     [_indicator bringSubviewToFront:[self view]];
 }
 
@@ -171,31 +210,40 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-#pragma mark - MPMediaPickerControllerDelegate
+#pragma mark - UIImagePickerControllerDelegate
 
-- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    MPMediaItem *theVideo = [[mediaItemCollection items] lastObject];
+    NSURL *theVideo = [[info allValues] objectAtIndex:0];
     
     // Transcribe the video!
     [_indicator startAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     dispatch_async(_workQueue, ^{
-        NSArray<NSURL *> *results = [[SCRVideoTranscriber sharedInstance] transcribeVideoAtURL:[theVideo assetURL]];
-        NSLog(@"%@", results);
+        NSArray<NSString *> *substrings = [[NSArray alloc] init];
+        NSArray<NSNumber *> *timestamps = [[NSArray alloc] init];
+        [[SCRVideoTranscriber sharedInstance] transcribeVideoAtURL:theVideo substringsResult:&substrings timestampsResult:&timestamps];
+        
+        NSLog(@"%@", substrings);
+        NSLog(@"%@", timestamps);
+        
+        [self _presentAlert:@"Audio transcription" message:[NSString stringWithFormat:@"Substrings: %@\nTimestamps: %@", substrings, timestamps]];
+        
+        [self->_indicator stopAnimating];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     });
 }
 
 #pragma mark - Private
 
 - (void)_selectVideo:(UIButton *)button {
-    MPMediaPickerController *mpc = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyVideo];
-    [mpc setPrompt:@"Select a video to search by dialogue"];
-    [mpc setAllowsPickingMultipleItems:NO];
-    [mpc setDelegate:self];
+    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+    [ipc setMediaTypes:@[[NSString stringWithFormat:@"%@", kUTTypeMovie]]];
+    [ipc setDelegate:self];
     
-    [self presentViewController:mpc animated:YES completion:nil];
+    [self presentViewController:ipc animated:YES completion:nil];
 }
 
 - (void)_presentAlert:(NSString *)title message:(NSString *)message {

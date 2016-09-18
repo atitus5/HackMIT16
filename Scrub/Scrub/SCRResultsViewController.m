@@ -6,6 +6,10 @@
 //  Copyright © 2016 Drew Titus. All rights reserved.
 //
 
+/*
+ <div>Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+ */
+
 #import "SCRResultsViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -285,7 +289,7 @@
     
     indicatorFrame = CGRectMake(0.0, 0.0, INDICATOR_SIZE, INDICATOR_SIZE);
     if (!_indicator) {
-        _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [_indicator setFrame:indicatorFrame];
         [_indicator setCenter:[[self view] center]];
         [[self view] addSubview:_indicator];

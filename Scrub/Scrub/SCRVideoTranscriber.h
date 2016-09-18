@@ -10,7 +10,7 @@
 
 @interface SCRVideoTranscriber : NSObject
 
-- (NSArray<NSURL *> *)transcribeVideoAtURL:(NSURL *)assetURL;
+- (void)transcribeVideoAtURL:(NSURL *)assetURL substringsResult:(NSArray<NSString *> **)substrings timestampsResult:(NSArray<NSNumber *> **)timestamps;
 
 + (instancetype)sharedInstance;
 
