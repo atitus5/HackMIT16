@@ -55,7 +55,19 @@ var SearchComponent = new React.createClass({
     console.log('video: '+ videoLink)
   },
 
+  watchUrlToXmlUrl(watchUrl) {
+
+
+    return xmlUrl;
+  },
+
   scrub(){
+
+    var watchUrl = watchUrlToXmlUrl(this.state.videoLink);
+    
+
+
+
     var x = new XMLHttpRequest();
     var timesToTextMap = new Map();
       x.open("GET", "https://www.youtube.com/api/timedtext?&lang=en&v=zGb9smintY0", true);
